@@ -1,0 +1,203 @@
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+            class="fas fa-bars"></i></a></li>
+      <li class="nav-item d-none d-sm-inline-block"><a href="#" class="nav-link">Home</a></li>
+      <li class="nav-item d-none d-sm-inline-block"><a href="#" class="nav-link">Contact</a></li>
+    </ul>
+
+  </nav>
+
+  <!-- Main Sidebar Container -->
+  <app-aside></app-aside> <!-- Hiển thị AsideComponent -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Quản Lý Sản Phẩm</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Quản Lý Sản Phẩm</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Danh Sách Sản Phẩm</h3>
+                <!-- Thêm ô tìm kiếm -->
+                <div class="float-right">
+                  <input type="text" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchTerm"
+                    (input)="filterProducts()" class="form-control"
+                    style="width: 300px; display: inline-block; margin-left: 20px;" />
+                </div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="card-body">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <div class="sort-buttons">
+                    <button (click)="setSortField('productID')" class="btn-sort">Sắp xếp theo Mã SP</button>
+                    <button (click)="setSortField('price')" class="btn-sort">Sắp xếp theo Giá</button>
+                    <button (click)="setSortField('quantity')" class="btn-sort">Sắp xếp theo Số lượng</button>
+                  </div>
+
+                  <!-- Sử dụng d-flex và gap-2 để dàn hàng ngang và tạo khoảng cách giữa các phần tử -->
+                  <div class="filter-buttons d-flex gap-2">
+                    <select [(ngModel)]="selectedSkinName" (change)="filterProducts()" class="form-select">
+                      <option value="">Chọn loại da</option>
+                      <option *ngFor="let skin of uniqueSkins" [value]="skin">{{skin}}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedBrand" (change)="filterProducts()" class="form-select">
+                      <option value="">Chọn thương hiệu</option>
+                      <option *ngFor="let brand of uniqueBrands" [value]="brand">{{brand}}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedCategory" (change)="filterProducts()" class="form-select">
+                      <option value="">Chọn danh mục</option>
+                      <option *ngFor="let category of uniqueCategories" [value]="category">{{category}}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedSubcategory" (change)="filterProducts()" class="form-select">
+                      <option value="">Chọn danh mục con</option>
+                      <option *ngFor="let subcategory of uniqueSubcategories" [value]="subcategory">{{subcategory}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Mã SP</th>
+                      <th>Tên SP</th>
+                      <th>Hình ảnh</th>
+                      <th>Xuất xứ</th>
+                      <th>Mô tả sản phẩm</th>
+                      <th>Giành cho da</th>
+                      <th>Thương hiệu</th>
+                      <th>Danh mục</th>
+                      <th>Danh mục con</th>
+                      <th>Review</th>
+                      <th>Giá</th>
+                      <th>Giá sau giảm</th>
+                      <th>Số lượng</th>
+                      <th>variant</th>
+                      <th>Discount Sản Phẩm</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let product of filteredProducts | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+                      <td>{{ product.productId }}</td>
+                      <td>{{ product.productName }}</td>
+                      <td>
+                        <img [src]="getImageSrc(product.images && product.images.length > 0 ? product.images[0] : '')"
+                          alt="Product Image" width="100%" height="100%" />
+                      </td>
+                      <td>{{ product.specifications }}</td>
+                      <td>{{ product.description }}</td>
+                      <td>{{ product.skinName }}</td>
+                      <td>{{ product.brandName }}</td>
+                      <td>{{ product.categoryName }}</td>
+                      <td>{{ product.subcategoryName }}</td>
+                      <td>{{ product.review }}</td>
+                      <td>{{ product.price | currency: 'VND':'symbol':'1.0-0' }}</td>
+                      <td>
+                        {{ calculateFinalPrice(product.price, product.discountsp_id) | currency: 'VND':'symbol':'1.0-0'
+                        }}
+                      </td>
+
+                      <td>{{ product.quantity }}</td>
+                      <td>{{ product.variant }}</td>
+                      <td>
+                        <select [(ngModel)]="product.discountsp_id"
+                          (change)="updateDiscountSp(product.productId, product.discountsp_id)" style="
+                                  width: 100%; 
+                                  padding: 12px; 
+                                  font-size: 16px; 
+                                  font-weight: bold; 
+                                  border: none; 
+                                  border-radius: 12px; 
+                                  background: linear-gradient(135deg, #007bff, #00d4ff); 
+                                  color: #fff; 
+                                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+                                  outline: none; 
+                                  transition: all 0.3s ease; 
+                                  appearance: none; 
+                                  cursor: pointer;">
+                          <option *ngFor="let discount_sp of discounts" [value]="discount_sp.discountsp_id" style="
+                                    padding: 10px; 
+                                    font-size: 14px; 
+                                    font-weight: normal; 
+                                    color: #333; 
+                                    background-color: #ffffff; 
+                                    transition: background-color 0.3s ease;">
+                            {{ discount_sp.discount_sp }}% ({{ discount_sp.start_date | date: 'dd/MM/yyyy' }} -
+                            {{ discount_sp.end_date | date: 'dd/MM/yyyy' }})
+                          </option>
+                        </select>
+                      </td>
+
+
+
+                      <td>
+                        <button (click)="deleteProduct(product.productId)" class="btn btn-danger"
+                          style="margin-top: 10px;">Xóa</button>
+                        <button (click)="removeDiscount(product.productId)" class="btn btn-danger"
+                          style="margin-top: 10px;">Xóa Discount</button>
+                        <button (click)="updateProduct(product.productId)" class="btn btn-warning"
+                          style="margin-top: 10px;">Cập nhật</button>
+                        <button (click)="detailProduct(product.productId)" class="btn btn-warning"
+                          style="margin-top: 10px;">Chi tiết sản phẩm</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <pagination-controls (pageChange)="currentPage = $event"
+                  class="pagination-center"></pagination-controls>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark"></aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+<script>
+  $(document).ready(function () {
+    $('#example1').DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  });
+</script>

@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="row" *ngFor="let product of products">
+        <!-- Sản phẩm 1 -->
+        <div class="col-md-3 mb-4">
+            <div class="card position-relative">
+                <div class="card-overlay">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        (click)="productDetail(product.productId)">
+                        Add To Cart
+                    </button>
+                    <div>
+                        <button class="btn btn-link text-white me-2"><i class="fa-solid fa-share-nodes"></i>
+                            Share</button>
+                        <button class="btn btn-link text-white"><i class="fa-solid fa-heart"></i>
+                            Like</button>
+                    </div>
+                </div>
+                <img [src]="avatarPreview ? avatarPreview : '/assets/upload/' + product.image" alt="Employee Avatar"
+                    class="img-fluid">
+                <div class="card-body">
+                    <h5 class="card-title">{{product.name}}</h5>
+                    <div class="price text-danger">
+                        <p *ngIf="product.sizes && product.sizes.length > 0">
+                            Giá: {{ (product.sizes[0].price | number:'1.0-0') + ' VNĐ' }}
+                    </div>
+                    <p class="card-text">{{ product.description | slice:0:100 }}{{ product.description.length > 100 ?
+                        '...' : '' }}</p> <b>Đã bán 15k</b>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class=" mb-3" style="max-width: 540px;" *ngIf="selectedProduct">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img [src]="avatarPreview ? avatarPreview : '/assets/upload/' + selectedProduct.image"
+                                class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ selectedProduct.name }}</h5>
+                                <div class="size-price" *ngFor="let size of selectedProduct.sizes">
+                                    <button class="btn d-flex"
+                                        [ngClass]="{'btn-outline-primary': selectedSize !== size, 'btn-warning': selectedSize === size}"
+                                        (click)="onSizeSelect(size)" style="margin: 5px;">
+                                        {{ size.variant }}
+                                    </button>
+                                </div>
+
+                                <!-- Display the selected size and price -->
+                                <div *ngIf="selectedSize">
+                                    <p>Price: {{ selectedSize.price | currency }}</p>
+                                </div>
+
+                            </div>
+                            <div>
+                                <label for="quantity">Quantity:</label>
+                                <div class="input-group"
+                                    style="width: 200px; display: inline-flex; align-items: center;">
+                                    <button class="btn btn-secondary" (click)="decrementQuantity()"
+                                        [disabled]="quantity <= 1">-</button>
+                                    <input type="number" id="quantity" [(ngModel)]="quantity" min="1" max="19"
+                                        class="form-control" style="width: 100px; text-align: center;">
+                                    <button class="btn btn-secondary" (click)="incrementQuantity()"
+                                        [disabled]="quantity >= 19">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="addToCart()">Thêm vào giỏ hàng</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,308 @@
+<app-navbar-client></app-navbar-client>
+<!-- Bottom Menu -->
+
+<div class="detail-product" *ngIf="selectedProduct">
+    <div class="container-fluid product-detail mt-5">
+        <div class="row">
+            <div class="col-md-7 d-flex">
+                <div class="thumbnails d-flex flex-column align-items-center me-3">
+                    <img *ngFor="let image of images || []" [src]="getImageSrc(image)" alt="Product Image Thumbnail"
+                        width="100" height="100" class="thumbnail mb-2" (click)="changeImage(image)">
+                </div>
+
+                <div class="product-image text-center">
+                    <img [src]="currentImage" alt="Product Image" class="img-fluid" id="main-image">
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-md-5" style="margin-top: 230px;">
+                <div class="product-info">
+                    <h2>{{ selectedProduct.productName }}</h2>
+                    <p class="brand">Thương hiệu: {{ selectedProduct.brandName }} | SKU: {{ selectedProduct.productId }}
+                    </p>
+                    <div class="rating">
+                        <i class="fas fa-star" *ngFor="let star of [1, 2, 3, 4, 5]"></i>
+                    </div>
+                    <div class="product-price">
+                        <span *ngIf="selectedProduct && !selectedSize">
+                            <!-- Hiển thị khoảng giá nếu có nhiều kích thước -->
+                            <span
+                                *ngIf="getMinAndMaxPrice(selectedProduct.sizes).minPrice !== getMinAndMaxPrice(selectedProduct.sizes).maxPrice">
+                                <span class="price red-bold">
+                                    {{ getMinAndMaxPrice(selectedProduct.sizes).minPrice | number }} VND -
+                                    {{ getMinAndMaxPrice(selectedProduct.sizes).maxPrice | number }} VND
+                                </span>
+                            </span>
+
+                            <!-- Hiển thị giá gốc và giá giảm nếu không có khoảng giá -->
+                            <ng-container
+                                *ngIf="getMinAndMaxPrice(selectedProduct.sizes).minPrice === getMinAndMaxPrice(selectedProduct.sizes).maxPrice">
+                                <p
+                                    *ngIf="selectedProduct.discountPrice && selectedProduct.price !== selectedProduct.discountPrice">
+                                    <span style="text-decoration: line-through;">
+                                        {{ selectedProduct.price | number }} VND
+                                    </span>
+                                </p>
+                                <p *ngIf="selectedProduct.discountPrice && selectedProduct.price !== selectedProduct.discountPrice"
+                                    class="price red-bold">
+                                    <span style="color: rgb(226, 23, 23);">
+                                        {{ selectedProduct.discountPrice | number }} VND
+                                    </span>
+                                </p>
+                                <p *ngIf="!selectedProduct.discountPrice || selectedProduct.price === selectedProduct.discountPrice"
+                                    class="price">
+                                    <span>
+                                        {{ selectedProduct.price | number }} VND
+                                    </span>
+                                </p>
+                            </ng-container>
+                        </span>
+
+                        <!-- Hiển thị giá cho sản phẩm có kích thước được chọn -->
+                        <div *ngIf="selectedSize">
+                            <p *ngIf="selectedSize.discountPrice && selectedSize.discountPrice !== selectedSize.price">
+                                <span style="text-decoration: line-through;">
+                                    {{ selectedSize.price | number }} VND
+                                </span>
+                            </p>
+                            <p *ngIf="selectedSize.discountPrice && selectedSize.discountPrice !== selectedSize.price"
+                                class="price red-bold">
+                                <span style="color: rgb(226, 23, 23);">
+                                    {{ selectedSize.discountPrice | number }} VND
+                                </span>
+                            </p>
+                            <p *ngIf="!selectedSize.discountPrice || selectedSize.discountPrice === selectedSize.price"
+                                class="price red-bold">
+                                <span style="color: rgb(226, 23, 23);">
+                                    {{ selectedSize.price | number }} VND
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="size-price" *ngFor="let size of selectedProduct.sizes">
+                        <button class="btn d-flex"
+                            [ngClass]="{'btn-outline-secondary': selectedSize !== size, 'btn-info': selectedSize === size}"
+                            (click)="onSizeSelect(size)" style="margin: 5px;">
+                            <div>{{ size.variant }}</div>
+                        </button>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group" style="width: 200px; display: inline-flex; align-items: center;">
+                            <button class="btn btn-secondary" (click)="decrementQuantity()"
+                                [disabled]="quantity <= 1">-</button>
+                            <input type="number" id="quantity" [(ngModel)]="quantity" min="1" max="19"
+                                class="form-control" style="width: 50px; text-align: center;">
+                            <button class="btn btn-secondary" (click)="incrementQuantity()"
+                                [disabled]="quantity >= 19">+</button>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="btn btn-primary" (click)="addToCart()">Thêm vào giỏ
+                            hàng</button>
+                        <button class="btn btn-danger custom-btn">Mua Ngay</button>
+
+                    </div>
+                    <button class="btn btn-link text-danger me-5" (click)="shareViaSocialMedia()">
+                        <i class="fa-solid fa-share-nodes"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Tabs -->
+    <div class="container-fluid my-5">
+        <ul class="nav nav-tabs" id="productTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description"
+                    type="button" role="tab" aria-controls="description" aria-selected="true">Mô tả sản phẩm</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications"
+                    type="button" role="tab" aria-controls="specifications" aria-selected="false">Thông số</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ingredients-tab" data-bs-toggle="tab" data-bs-target="#ingredients"
+                    type="button" role="tab" aria-controls="ingredients" aria-selected="false">Thành phần</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="benefits-tab" data-bs-toggle="tab" data-bs-target="#benefits" type="button"
+                    role="tab" aria-controls="benefits" aria-selected="false">Công dụng</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="usage-tab" data-bs-toggle="tab" data-bs-target="#usage" type="button"
+                    role="tab" aria-controls="usage" aria-selected="false">Cách dùng</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button"
+                    role="tab" aria-controls="reviews" aria-selected="false">Đánh giá</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="productTabContent">
+            <div class="tab-pane fade show active p-3" id="description" role="tabpanel"
+                aria-labelledby="description-tab">
+                <h5>Mô tả sản phẩm</h5>
+                <p>{{ selectedProduct.description }}</p>
+            </div>
+            <div class="tab-pane fade p-3" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                <h5>Thông số sản phẩm</h5>
+                <p>
+                    - Dung tích: {{ selectedProduct.quantity }}ml <br>
+                    - Loại da phù hợp: {{ selectedProduct.skinName }} <br>
+                    - Xuất xứ: {{ selectedProduct.specifications }} <br>
+                    - Hạn sử dụng: 12 tháng sau khi mở nắp
+                </p>
+            </div>
+            <div class="tab-pane fade p-3" id="ingredients" role="tabpanel" aria-labelledby="ingredients-tab">
+                <h5>Thành phần</h5>
+                <p>{{ selectedProduct.ingredients }}</p>
+            </div>
+            <div class="tab-pane fade p-3" id="benefits" role="tabpanel" aria-labelledby="benefits-tab">
+                <h5>Công dụng</h5>
+                <p>{{ selectedProduct.benefits }}</p>
+            </div>
+            <div class="tab-pane fade p-3" id="usage" role="tabpanel" aria-labelledby="usage-tab">
+                <h5>Cách dùng</h5>
+                <p>{{ selectedProduct.usage }}</p>
+            </div>
+            <div class="tab-pane fade p-3" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                <h5>Đánh giá</h5>
+                <p>{{ selectedProduct.review }}</p>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="review-title">Đánh giá & nhận xét</h3>
+    <div class="review" *ngFor="let comment of comments">
+        <div class="review-content">
+            <div class="review-text">
+                {{ comment.comment }}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<footer class="footer mt-5">
+    <div class="p-5">
+        <div class="row justify-content-center ms-5">
+            <!-- Logo and Company Info -->
+            <div class="col-md-4 mb-3 ">
+                <img src="image/logo.png" alt="Company Logo" class="mb-2" style="max-width: 150px;">
+                <p>CÔNG TY TNHH 4 Anh Em</p>
+                <p>Giấy chứng nhận đăng ký doanh nghiệp số 030918188, cấp ngày 29/01/2011, nơi cấp sở kế hoạch và
+                    đầu tư TP HCM.</p>
+                <p>Trụ sở chính: Tổ X9-012, TP Hồ Chí Minh, VN</p>
+                <p>Điện thoại: 0123456789</p>
+                <img src="image/image 24.png" alt="Bộ Công Thương" class="mt-2" style="max-width: 120px;">
+            </div>
+
+            <!-- Social Media -->
+            <div class="col-md-2 mb-3">
+                <h6>Theo dõi chúng tôi</h6>
+                <div class="d-flex">
+                    <a href="#" class="mb-2"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="mb-2"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="mb-2"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+                <div class="flex-column">
+                    <h6>Chấp nhận Phương thức thanh toán</h6>
+                    <img src="image/image 29.png" alt="VNPay" class="mb-2" style="max-width: 100px;">
+                    <img src="image/image 30.png" alt="MoMo" style="max-width: 100px;">
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+
+
+            <!-- About Us -->
+            <div class="col-md-2 mb-3 ">
+                <h6>Về chúng tôi</h6>
+                <ul class="list-unstyled ">
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Tin tức</a></li>
+                    <li><a href="#">Cẩm nang làm đẹp</a></li>
+                    <li><a href="#">Tuyển dụng</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                    <li><a href="#">Địa chỉ cửa hàng</a></li>
+                    <li><a href="#">Cho thuê mặt bằng</a></li>
+                </ul>
+            </div>
+
+            <!-- Policies -->
+            <div class="col-md-4 mb-3">
+                <h6>Chính sách</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#">Chính sách và quy định chung</a></li>
+                    <li><a href="#">Quy định và hình thức thanh toán</a></li>
+                    <li><a href="#">Chính sách vận chuyển</a></li>
+                    <li><a href="#">Chính sách đổi/trả hàng và hoàn tiền</a></li>
+                    <li><a href="#">Chính sách bảo mật thông tin cá nhân</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    <li><a href="#">Quy trình xuất hóa đơn điện tử</a></li>
+                    <li><a href="#">Chính sách Thông tin Hội Cầm</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-7">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4581.7122074656945!2d106.62223831125394!3d10.854452289254485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752a213fc53707%3A0x282726c50d505dd2!2zNDIgxJAuIFTDtCBLw70sIFRydW5nIE3hu7kgVMOieSwgUXXhuq1uIDEyLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e1!3m2!1svi!2s!4v1727494769344!5m2!1svi!2s"
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="col-md-5">
+                <h4>Địa chỉ cửa hàng</h4>
+                <div class="location d-flex">
+                    <p><i class="fa-solid fa-location-dot"></i></p>
+                    <p>42 Tô Ký Trung Mỹ Tây Quận 12</p>
+                </div>
+                <div class="phone-number d-flex">
+                    <p> <i class="fa-solid fa-phone"></i></p>
+                    <p>024 12345678</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<a href="#" class="btn btn-secondary btn-lg-square rounded-circle chatbot-button" onclick="toggleChatbox()">
+    <i class="fa fa-robot"></i>
+</a>
+
+<!-- Chatbox -->
+<div id="chatbox" class="chatbox">
+    <div class="chatbox-header">
+        <h5>Chat with Us</h5>
+        <button type="button" class="btn-close" aria-label="Close" onclick="toggleChatbox()"></button>
+    </div>
+    <div class="chatbox-body">
+        <div class="message">Hello! How can we help you today?</div>
+        <!-- Messages will appear here -->
+    </div>
+    <div class="chatbox-footer">
+        <input type="text" class="form-control" placeholder="Type your message here...">
+        <button class="btn btn-primary">Send</button>
+    </div>
+</div>
+
+<!-- Back-to-Top Button -->
+<div class="back-to-top-container">
+    <a href="#" class="btn btn-secondary btn-lg-square rounded-circle back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/66069d7296.js" crossorigin="anonymous"></script>
+<script src="/static/user/js/script.js"></script>

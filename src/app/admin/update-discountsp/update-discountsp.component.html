@@ -1,0 +1,64 @@
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Navbar content here -->
+    </nav>
+
+    <app-aside></app-aside> <!-- Hiển thị AsideComponent -->
+
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Cập Nhật Mã Giảm Giá</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                        title="Collapse"><i class="fas fa-minus"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <form (ngSubmit)="updateDiscount()" [formGroup]="discountForm" id="discount-details-form">
+                                    <!-- Giá Trị Giảm Giá -->
+                                    <div class="form-group">
+                                        <label for="discount_sp">Giá Trị Giảm Giá (%)</label>
+                                        <input type="number" id="discount_sp" formControlName="discount_sp" class="form-control" min="0" required>
+                                    </div>
+
+                                    <!-- Ngày Bắt Đầu -->
+                                    <div class="form-group">
+                                        <label for="start_date">Ngày Bắt Đầu</label>
+                                        <input type="date" id="start_date" formControlName="start_date" class="form-control" required>
+                                    </div>
+
+                                    <!-- Ngày Kết Thúc -->
+                                    <div class="form-group">
+                                        <label for="end_date">Ngày Kết Thúc</label>
+                                        <input type="date" id="end_date" formControlName="end_date" class="form-control" required>
+                                    </div>
+
+                                    <!-- Trạng Thái -->
+                                    <div class="form-group">
+                                        <label for="status">Trạng Thái</label>
+                                        <select id="status" formControlName="status" class="form-control" required>
+                                            <option [value]="true">Hoạt Động</option>
+                                            <option [value]="false">Ngừng Hoạt Động</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Nút Cập Nhật -->
+                                    <div class="form-group">
+                                        <button type="submit" class="btn bg-gradient-warning btn-md">Cập Nhật</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

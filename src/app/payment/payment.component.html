@@ -1,0 +1,19 @@
+<div class="container">
+    <h1>Đặt hàng thành công!</h1>
+    <p>Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đang chờ được xác nhận.</p>
+
+    <!-- Hiển thị thông tin đơn hàng -->
+    <div *ngIf="orderId && totalPrice && paymentStatus === '1'">
+        <p><strong>Mã đơn hàng:</strong> {{ orderId }}</p>
+        <p><strong>Mã giao dịch:</strong> {{ transactionId }}</p>
+        <p><strong>Tổng giá trị:</strong> {{ totalPrice }}</p>
+        <p><strong>Thời gian thanh toán:</strong> {{ paymentTime }}</p>
+    </div>
+
+    <!-- Nếu thanh toán thất bại -->
+    <div *ngIf="paymentStatus === '0'">
+        <p>Thanh toán không thành công. Vui lòng thử lại.</p>
+    </div>
+
+    <button (click)="goToHome()">Quay về trang chủ</button>
+</div>

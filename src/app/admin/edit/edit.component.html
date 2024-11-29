@@ -1,0 +1,169 @@
+<div class="wrapper">
+	<!-- Navbar -->
+	<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+		<ul class="navbar-nav">
+			<li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+						class="fas fa-bars"></i></a></li>
+			<li class="nav-item d-none d-sm-inline-block"><a href="#" class="nav-link">Home</a></li>
+			<li class="nav-item d-none d-sm-inline-block"><a href="#" class="nav-link">Contact</a></li>
+		</ul>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item"><a class="nav-link" data-widget="navbar-search" href="#" role="button"><i
+						class="fas fa-search"></i></a></li>
+			<li class="nav-item dropdown"><a class="nav-link" data-toggle="dropdown" href="#"><i
+						class="far fa-comments"></i><span class="badge badge-danger navbar-badge">3</span></a></li>
+			<li class="nav-item dropdown"><a class="nav-link" data-toggle="dropdown" href="#"><i
+						class="far fa-bell"></i><span class="badge badge-warning navbar-badge">15</span></a></li>
+			<li class="nav-item"><a class="nav-link" data-widget="fullscreen" href="#" role="button"><i
+						class="fas fa-expand-arrows-alt"></i></a></li>
+			<li class="nav-item"><a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"
+					role="button"><i class="fas fa-th-large"></i></a></li>
+		</ul>
+	</nav>
+	<app-aside></app-aside> <!-- Hiển thị AsideComponent -->
+
+	<div class="content-wrapper">
+		<section class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-12">
+						<div class="card card-primary">
+							<div class="card-header">
+								<h3 class="card-title">Chỉnh Sửa Sản Phẩm</h3>
+								<div class="card-tools">
+									<button type="button" class="btn btn-tool" data-card-widget="collapse"
+										title="Collapse"><i class="fas fa-minus"></i></button>
+								</div>
+							</div>
+
+							<div class="card-body">
+								<form (ngSubmit)="onSubmit()" #productForm="ngForm" id="product-details-form">
+									<div class="form-group"><label for="productID">Mã Sản Phẩm</label><input type="text"
+											id="productID" name="productID" class="form-control"
+											[(ngModel)]="product.productId" readonly></div>
+
+									<!-- Tên sản phẩm -->
+									<div class="form-group"><label for="productName">Tên Sản Phẩm</label><input
+											type="text" id="productName" name="productName" class="form-control"
+											[(ngModel)]="product.productName" required></div>
+
+									<!-- Mô tả sản phẩm -->
+									<div class="form-group"><label for="description">Mô Tả Sản Phẩm</label><textarea
+											id="description" name="description" class="form-control" rows="4"
+											[(ngModel)]="product.description" required></textarea></div>
+
+									<!-- Xuất xứ -->
+									<div class="form-group"><label for="specifications">Xuất Xứ</label><textarea
+											id="specifications" name="specifications" class="form-control" rows="4"
+											[(ngModel)]="product.specifications" required></textarea></div>
+									<div class="form-group"><label for="specifications">Xuất Xứ</label><select
+											id="specifications" class="form-control" name="specifications"
+											[(ngModel)]="product.specifications" required>
+											<option *ngFor="let country of countries" [value]="country">{{ country }}
+											</option>
+										</select></div>
+
+									<!-- Thành phần -->
+									<div class="form-group"><label for="ingredients">Thành Phần</label><textarea
+											id="ingredients" name="ingredients" class="form-control" rows="3"
+											[(ngModel)]="product.ingredients" required></textarea></div>
+
+									<!-- Lợi ích -->
+									<div class="form-group"><label for="benefits">Lợi ích</label><textarea id="benefits"
+											name="benefits" class="form-control" rows="4" [(ngModel)]="product.benefits"
+											required></textarea></div>
+
+									<!-- Cách dùng -->
+									<div class="form-group"><label for="usage">Cách Dùng</label><textarea id="usage"
+											name="usage" class="form-control" rows="4" [(ngModel)]="product.usage"
+											required></textarea></div>
+
+									<!-- Review -->
+									<div class="form-group"><label for="review">Review</label><textarea id="review"
+											name="review" class="form-control" rows="4" [(ngModel)]="product.review"
+											required></textarea></div>
+
+									<!-- Tên loại da -->
+									<div class="form-group"><label for="skinType">Tên Loại Da</label><select
+											id="skinType" name="skinType" class="form-control"
+											[(ngModel)]="product.skinName" required>
+											<option *ngFor="let skinType of skintypes" [ngValue]="skinType.skinName">{{
+												skinType.skinName }}</option>
+										</select></div>
+
+									<!-- Thương hiệu -->
+									<div class="form-group"><label for="brand">Thương Hiệu</label><select
+											name="brandName" class="form-control" [(ngModel)]="product.brandName"
+											required>
+											<option *ngFor="let brand of brands" [value]="brand.brandName">{{
+												brand.brandName }}</option>
+										</select></div>
+
+									<!-- Danh mục con -->
+									<div class="form-group"><label for="subcategory">Tên Danh Mục Con</label><select
+											id="subcategoryName" name="subcategoryName" class="form-control"
+											[(ngModel)]="product.subcategoryName" required>
+											<option *ngFor="let subcategory of subcategories"
+												[ngValue]="subcategory.subcategoryName">{{ subcategory.subcategoryName
+												}}</option>
+										</select></div>
+
+									<!-- Kích thước sản phẩm -->
+									<div *ngFor="let size of productSizes; let i = index">
+										<div class="form-group"><label for="quantity-{{i}}">Số Lượng</label><input
+												type="number" id="quantity-{{i}}" name="quantity-{{i}}"
+												class="form-control" [(ngModel)]="size.quantity" required></div>
+										<div class="form-group"><label for="price-{{i}}">Giá Tiền</label><input
+												type="number" id="price-{{i}}" name="price-{{i}}" class="form-control"
+												[(ngModel)]="size.price" required></div>
+										<div class="form-group"><label for="variant-{{i}}">Kiểu Sản Phẩm</label><input
+												type="text" id="variant-{{i}}" name="variant-{{i}}" class="form-control"
+												[(ngModel)]="size.variant" required></div>
+										<button type="button" *ngIf="productSizes.length > 1"
+											(click)="removeProductSize(i)" class="btn btn-danger">Xóa</button>
+									</div>
+									<button type="button" (click)="addSize()" class="btn btn-primary">Thêm kích
+										thước</button>
+
+									<!-- Ảnh sản phẩm -->
+									<div class="image-container">
+										<div *ngFor="let image of images; let i = index">
+											<img alt="Hình ảnh sản phẩm" class="img-thumbnail" [src]="image" width="20%"
+												height="20%">
+											<button type="button" (click)="removeOldImage(i)"
+												class="btn btn-danger btn-sm">Xóa</button>
+										</div>
+									</div>
+
+									<!-- Ảnh sản phẩm mới -->
+									<div class="form-group">
+										<div class="row">
+											<div class="col-9">
+												<div class="col-12 form-group"><label for="poster">Ảnh Sản
+														Phẩm</label><input type="file"
+														(change)="onImageSelected($event)" multiple></div>
+
+												<div class="image-preview-container">
+													<div *ngFor="let image of selectedImages"><img [src]="image"
+															alt="Image Preview"
+															style="width: 100px; height: 100px; margin: 5px;"></div>
+													<div *ngFor="let image of updatedImages"><span>{{ image
+															}}</span><button (click)="removeImage(image)">Xóa</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- Nút Cập Nhật -->
+									<div class="form-group"><button type="submit"
+											class="btn bg-gradient-warning btn-md">Cập Nhật</button></div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>

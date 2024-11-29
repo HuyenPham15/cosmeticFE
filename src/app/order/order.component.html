@@ -1,0 +1,71 @@
+<!-- Tạo các tab để chọn trạng thái -->
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation" *ngFor="let status of statuses">
+        <button class="nav-link" [class.active]="status.statusId === activeTab"
+            [attr.aria-selected]="status.statusId === activeTab ? 'true' : 'false'"
+            (click)="setActiveTab(status.statusId)">
+            {{ status.statusName }}
+        </button>
+    </li>
+</ul>
+
+<!-- Hiển thị danh sách đơn hàng cho mỗi trạng thái -->
+<div class="tab-content" id="pills-tabContent">
+    <div *ngFor="let status of statuses" class="tab-pane fade" [class.show]="status.statusId === activeTab"
+        [class.active]="status.statusId === activeTab" id="pills-{{status.statusId}}" role="tabpanel">
+
+        <!-- Hiển thị danh sách đơn hàng cho mỗi trạng thái -->
+        <div *ngIf="ordersByStatus[status.statusId]?.length; else emptyOrders">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mã đơn hàng</th>
+                        <th scope="col">Ngày đặt</th>
+                        <th scope="col">Người đặt</th>
+                        <th scope="col">Phương thức thanh toán</th>
+                        <th scope="col">Địa chỉ</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of ordersByStatus[status.statusId]">
+                        <th scope="row">{{ order.orderID }}</th>
+                        <td>{{ order.orderID }}</td>
+                        <td>{{ order.orderDate | date }}</td>
+                        <td *ngIf="order?.userFirstName">{{ order?.userFirstName }} {{ order?.userLastName }}</td>
+                        <td>{{ order.paymentMethod }}</td>
+                        <td>{{ order.shippingAddress }}</td>
+                        <td>{{ order.totalPrice | currency }}</td>
+                        <td>
+                            <!-- Nếu trạng thái là 1, hiển thị nút xác nhận -->
+                            <ng-container *ngIf="order?.statusId === 1; else updateStatus">
+                                <button (click)="confirmOrder(order?.orderID)">
+                                    Xác nhận
+                                </button>
+                            </ng-container>
+
+                            <!-- Nếu trạng thái là 2 hoặc khác, hiển thị danh sách trạng thái -->
+                            <ng-template #updateStatus>
+                                <select [(ngModel)]="order.statusId" (change)="updateOrderStatus(order.id, $event)">
+                                    <option *ngFor="let status of statuses" [value]="status.statusId">
+                                        {{ status.statusName }}
+                                    </option>
+                                </select>
+
+                            </ng-template>
+                        </td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Nếu không có đơn hàng nào -->
+        <ng-template #emptyOrders>
+            <p>Không có đơn hàng nào trong trạng thái này.</p>
+        </ng-template>
+    </div>
+</div>

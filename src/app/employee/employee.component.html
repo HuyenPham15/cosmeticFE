@@ -1,0 +1,61 @@
+<app-navbar [title]="title"></app-navbar>
+<section class="container mt-5">
+    <h3>Employee List</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Gender</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="employee-list">
+            <tr *ngFor="let employee of employees">
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.lastName }}</td>
+                <td>{{ employee.firstName }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.phoneNumber }}</td>
+                <td>{{ employee.gender ? 'Nam' : 'Nữ' }}</td>
+                <td>
+                    <ng-container *ngIf="role === 'R01'">
+                        <ng-container *ngIf="employee.verified; else disabledActions">
+                            <button (click)="employeeDetails(employee.id)" class="btn btn-secondary me-2">View</button>
+                            <button (click)="updateEmployee(employee.id)" class="btn btn-info">Edit</button>
+                            <button (click)="deleteEmployee(employee.id)" [disabled]="isDeleting" class="btn btn-danger"
+                                style="margin-left: 10px">
+                                Delete
+                            </button>
+                        </ng-container>
+                        <ng-template #disabledActions>
+                            <button (click)="enable(employee.id)" class="btn btn-success" style="margin-left: 10px">Mở
+                                lại</button>
+                        </ng-template>
+                    </ng-container>
+
+                    <ng-container *ngIf="role === 'R02'">
+                        <ng-container *ngIf="employee.verified; else disabledView">
+                            <button (click)="employeeDetails(employee.id)" class="btn btn-secondary me-2">View</button>
+                        </ng-container>
+                        <ng-template #disabledView>
+                            <span class="text-danger">Nhân viên đã bị vô hiệu hóa</span>
+                            <button (click)="enable(employee.id)" class="btn btn-success" style="margin-left: 10px">Mở
+                                lại</button>
+                        </ng-template>
+                    </ng-container>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</section>
+<!-- Employee Details Form -->
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    <p>&copy; 2024 Company Name. All rights reserved.</p>
+</footer>

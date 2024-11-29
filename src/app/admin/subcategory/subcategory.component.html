@@ -1,0 +1,19 @@
+<p>subcategory works!</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 40px;">subcategoryID</th>
+            <th style="width: 180px;">subcategoryName</th>
+            <th style="width: 80px;">categoryID</th>
+            <th></th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        <tr *ngFor="let subcategory of subcategories">
+            <td>{{ subcategory.subcategoryID }}</td>
+            <td>{{ subcategory.subcategoryName }}</td>
+            <td>{{ subcategory.category.categoryID }}</td>
+        </tr>
+    </tbody>
+</table>

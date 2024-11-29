@@ -1,0 +1,159 @@
+<header class="d-flex align-items-center">
+    <div class="header-sale col-md-10">
+        <div class="row text-center text-danger">
+            <div class="col">Giao Hàng Nhanh</div>
+            <div class="col">Deal Hốt Hơn Họt</div>
+            <div class="col">Giảm 50%</div>
+            <div class="col">Freeship</div>
+        </div>
+    </div>
+    <div class="header-language ms-auto d-flex align-items-center col-md-2 justify-content-end">
+        <!-- Dropdown ngôn ngữ -->
+        <div class="dropdown">
+            <a class=" dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-globe" style="color: #2b2b2b; font-size: 20px;"></i>
+            </a>
+
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Tiếng việt</a></li>
+                <li><a class="dropdown-item" href="#">Tiếng Anh</a></li>
+            </ul>
+        </div>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="languageSwitch">
+        </div>
+    </div>
+</header>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand ms-5 col-md-2 text-center" href="#">
+            <img src="image/logo.png" alt="Logo" class="d-inline-block align-text-top" style="height: 120px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="search-bar d-flex align-items-center mt-3 col-md-5">
+                <div class="search-icon me-2">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+                <input type="text" placeholder="Search product!!!" class="search-input flex-grow-1">
+                <button class="search-button ms-3"><span><i class="fa-solid fa-magnifying-glass"></i></span></button>
+            </div>
+            <div class="d-flex align-items-center me-5 col-md-5 justify-content-center">
+                <a routerLink="/cart" routerLinkActive="active" class="btn position-relative me-3">
+                    <i class="fas fa-shopping-cart" style="height: 7px;">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ uniqueProductCount }}</span>
+                    </i>
+                    Giỏ hàng
+                </a>
+                <a href="wishlist.html" class="btn me-3">
+                    <i class="fas fa-heart"></i> Yêu Thích
+                </a>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item" *ngIf="!userEmail">
+                        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login/Register</a>
+                    </li>
+                    <li class="nav-item me-5" *ngIf="userEmail">
+                        <a class="navbar-text" [routerLink]="['/profile', userID]">Xin chào, {{ firstName }}</a>
+                    </li>
+
+                    <li class="nav-item" *ngIf="userEmail">
+                        <button (click)="logout()" class="btn btn-primary">Logout</button>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid py-2 border-top" id="navbarNavDropdown">
+    <div class="d-flex justify-content-center">
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fas fa-bars"></i> Danh mục sản phẩm
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li *ngFor="let category of category">
+                    <a class="dropdown-item" [routerLink]="['/category', category.categoryID]"
+                        (click)="getProductsByCategory(category.categoryID)">
+                        {{ category.categoryName }}
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <a href="#" class="me-3">Giới thiệu</a>
+        <a href="#" class="me-3">Khuyến mãi</a>
+        <a href="#" class="me-3">Xu hướng làm đẹp</a>
+        <a href="/brand" class="m3-3">Thương hiệu</a>
+        <a href="#" class="me-3">Hàng mới về</a>
+        <a href="#" class="me-3">Liên hệ</a>
+    </div>
+</div>
+<section>
+    <div class="container-fluid d-flex">
+        <div class="col-md-7 ms-3">
+            <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/assets/image/image 7.png" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="assets/image/image 8.png" class="d-block w-100" alt="...">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="discount col-md-4">
+            <img src="/assets/image/km1 (1).png" alt="">
+            <img src="/assets/image/km1 (2).png" alt="">
+            <img src="/assets/image/km1 (3).png" alt="">
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container my-4">
+        <div class="row text-center">
+            <!-- Badge 1 -->
+            <div class="col-3">
+                <div class="badge-label moi">
+                    <img src="/assets/image/image 2.png" alt="">
+                </div>
+            </div>
+            <!-- Badge 2 -->
+            <div class="col-3">
+                <div class="badge-label hot">
+                    <img src="/assets/image/image 3.png" alt="">
+                </div>
+            </div>
+            <!-- Badge 3 -->
+            <div class="col-3">
+                <div class="badge-label mua1-tang1">
+                    <img src="/assets/image/image 4.png" alt="">
+                </div>
+            </div>
+            <!-- Badge 4 -->
+            <div class="col-3">
+                <div class="badge-label mua-la-co-qua">
+                    <img src="/assets/image/image 5.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

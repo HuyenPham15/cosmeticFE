@@ -1,0 +1,185 @@
+<app-navbar-client></app-navbar-client>
+<div class="container">
+    <h3 class="text-center mt-5 mb-0">GIỎ HÀNG CỦA BẠN</h3>
+</div>
+<div class="row">
+
+</div>
+<div class="shopping-cart">
+    <div class="pay before-footer-section">
+        <div class="container">
+            <div class="row mb-5">
+                <form class="col-md-12" method="post">
+                    <div class="site-blocks-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="product-name">
+                                        <input type="checkbox" name="selectedItems" class="form-check-input"
+                                            [(ngModel)]="selectAll" (change)="toggleSelectAll()">
+                                    </th>
+                                    <th class="product-name">Sản phẩm</th>
+                                    <th class="product-price">Giá tiền</th>
+                                    <th class="product-quantity">Số lượng</th>
+                                    <th class="product-total">Thành tiền</th>
+                                    <th class="product-remove"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of cartItems">
+                                    <td class="product-name">
+                                        <input type="checkbox" name="selectedItems" class="form-check-input"
+                                            [(ngModel)]="item.selected" (change)="calculateTotal()">
+                                    </td>
+                                    <td>
+                                        <div class="card mb-3 rounded-0 border-0" style="max-width: 540px;">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img [src]="'/assets/upload/' + item.productImage"
+                                                        class="img-fluid rounded-start" alt="...">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">{{item.productName}}</h5>
+                                                        <p class="card-volume"><strong>{{item.variant}}</strong>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="card-price">{{ item.price | currency:'VND':'symbol':'1.0-0' }}</p>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="input-group quantity-controls">
+                                            <input type="number" [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="item.quantity"
+                                                style="width: 60px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 5px;"
+                                                (change)="updateTotalPrice(item)">
+                                        </div>
+                                    </td>
+                                    <td><span>{{item.totalPrice | currency:'VND':'symbol':'1.0-0'}}</span></td>
+                                    <td><a (click)="removeItem(item)" class="remove-link">Xóa</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6 pl-5">
+                    <div class="row justify-content-end">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="col-md-12 text-right border-bottom mb-5">
+                                    <h3 class="text-black h4 text-uppercase">Tổng tiền</h3>
+                                </div>
+                            </div>
+
+                            <div class="row mb-5">
+                                <div class="col-md-6"><span class="text-black">Tổng tiền</span></div>
+                                <div class="col-md-6 text-right"><strong class="text-black">{{ totalSelectedPrice |
+                                        currency:'VND':'symbol':'1.0-0' }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <button class="btn btn-secondary checkout" (click)="proceedToCheckout()">Tiến hành đặt
+                                    hàng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="footer py-4">
+    <div class="container">
+        <div class="row">
+            <!-- Logo and Company Info -->
+            <div class="col-md-4 mb-3">
+                <img src="image/logo.png" alt="Company Logo" class="mb-2" style="max-width: 150px;">
+                <p>CÔNG TY TNHH 4 Anh Em</p>
+                <p>Giấy chứng nhận đăng ký doanh nghiệp số 030918188, cấp ngày 29/01/2011, nơi cấp sở kế hoạch và
+                    đầu tư TP HCM.</p>
+                <p>Trụ sở chính: Tổ X9-012, TP Hồ Chí Minh, VN</p>
+                <p>Điện thoại: 0123456789</p>
+                <img src="image/image 24.png" alt="Bộ Công Thương" class="mt-2" style="max-width: 120px;">
+            </div>
+
+            <!-- Social Media -->
+            <div class="col-md-2 mb-3">
+                <h6>Theo dõi chúng tôi</h6>
+                <div class="d-flex">
+                    <a href="#" class="mb-2"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="mb-2"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="mb-2"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+                <div class="flex-column">
+                    <h6>Chấp nhận Phương thức thanh toán</h6>
+                    <img src="image/image 29.png" alt="VNPay" class="mb-2" style="max-width: 100px;">
+                    <img src="image/image 30.png" alt="MoMo" style="max-width: 100px;">
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+
+
+            <!-- About Us -->
+            <div class="col-md-2 mb-3">
+                <h6>Về chúng tôi</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Tin tức</a></li>
+                    <li><a href="#">Cẩm nang làm đẹp</a></li>
+                    <li><a href="#">Tuyển dụng</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                    <li><a href="#">Địa chỉ cửa hàng</a></li>
+                    <li><a href="#">Cho thuê mặt bằng</a></li>
+                </ul>
+            </div>
+
+            <!-- Policies -->
+            <div class="col-md-3 mb-3">
+                <h6>Chính sách</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#">Chính sách và quy định chung</a></li>
+                    <li><a href="#">Quy định và hình thức thanh toán</a></li>
+                    <li><a href="#">Chính sách vận chuyển</a></li>
+                    <li><a href="#">Chính sách đổi/trả hàng và hoàn tiền</a></li>
+                    <li><a href="#">Chính sách bảo mật thông tin cá nhân</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    <li><a href="#">Quy trình xuất hóa đơn điện tử</a></li>
+                    <li><a href="#">Chính sách Thông tin Hội Cầm</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-7">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4581.7122074656945!2d106.62223831125394!3d10.854452289254485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752a213fc53707%3A0x282726c50d505dd2!2zNDIgxJAuIFTDtCBLw70sIFRydW5nIE3hu7kgVMOieSwgUXXhuq1uIDEyLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e1!3m2!1svi!2s!4v1727494769344!5m2!1svi!2s"
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="col-md-5">
+                <h4>Địa chỉ cửa hàng</h4>
+                <div class="location d-flex">
+                    <p><i class="fa-solid fa-location-dot"></i></p>
+                    <p>42 Tô Ký Trung Mỹ Tây Quận 12</p>
+                </div>
+                <div class="phone-number d-flex">
+                    <p> <i class="fa-solid fa-phone"></i></p>
+                    <p>024 12345678</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

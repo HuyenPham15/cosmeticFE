@@ -1,0 +1,64 @@
+<header class="bg-dark text-white text-center py-4">
+    <h1 class="display-4">{{title}}</h1>
+</header>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" routerLink="/employees"
+                        routerLinkActive="active">Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="role === 'R01' ? '/user' : null"
+                        [routerLinkActive]="role === 'R01' ? 'active' : ''" (click)="checkPermission($event)">User</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="role === 'R01' ? '/create-employee' : null"
+                        [routerLinkActive]="role === 'R01' ? 'active' : ''" (click)="checkPermission($event)">
+                        Create-Employee
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="role === 'R01' ? '/create-employee' : null"
+                        [routerLinkActive]="role === 'R01' ? 'active' : ''" (click)="checkPermission($event)">
+                        Quản lí đơn hàng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="role === 'R01' ? '/auth' : null"
+                        [routerLinkActive]="role === 'R01' ? 'active' : ''" (click)="checkPermission($event)">
+                        Bảo mật
+                    </a>
+                </li>
+
+
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" *ngIf="!userEmail">
+                    <a class="nav-link" routerLink="login" routerLinkActive="active">Log in/Register</a>
+                </li>
+                <li class="nav-item me-5" *ngIf="userEmail">
+                    <span class="navbar-text">Welcome, {{ firstName }}</span>
+                </li>
+                <li class="nav-item" *ngIf="userEmail">
+                    <button (click)="logout()" class="btn btn-primary">Logout</button>
+                </li>
+                <div *ngIf="notifications.length > 0" class="notifications">
+                    <h3>Thông báo đơn hàng mới</h3>
+                    <ul>
+                        <li *ngFor="let notification of notifications">
+                            Đơn hàng {{ notification.orderId }} đã có thông báo mới
+                            <button (click)="confirmOrder(notification.orderId)">Xác nhận đơn hàng</button>
+                        </li>
+                    </ul>
+                </div>
+
+            </ul>
+        </div>
+    </div>
+</nav>

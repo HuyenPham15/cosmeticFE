@@ -1,0 +1,207 @@
+<app-navbar-client></app-navbar-client>
+<div class="row">
+    <div class="col-md-3 mt-3">
+        <div class="sidebar bg-white ms-5 border-right">
+            <h3 class="filter-title">BỘ LỌC TÌM KIẾM</h3>
+
+            <!-- Filter Section: Danh Mục -->
+            <div class="filter-section mb-4" *ngIf="subcategory.length > 0">
+                <h3 class="h4">{{ selectedCategoryName1 }}</h3> <!-- Tên danh mục mẹ -->
+                <ul class="list-unstyled">
+                    <li *ngFor="let subcategory of subcategory">
+                        <a (click)="onSubcategoryClick(subcategory.subcategoryID)" class="subcategory-link"
+                            [class.active]="selectedSubcategoryID.includes(subcategory.subcategoryID)">
+                            {{ subcategory.subcategoryName }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Other Filter Sections -->
+            <div class="filter-section mb-4">
+                <h3 class="h6">Xuất Xứ Thương Hiệu</h3>
+                <ul class="list-unstyled">
+                    <li><input type="checkbox" id="thuy-dien" name="thuy-dien"> <label for="thuy-dien">Thụy
+                            Điển</label></li>
+                    <li><input type="checkbox" id="thuy-si" name="thuy-si"> <label for="thuy-si">Thụy Sĩ</label>
+                    </li>
+                    <li><input type="checkbox" id="y" name="y"> <label for="y">Ý</label></li>
+                    <li><input type="checkbox" id="anh" name="anh"> <label for="anh">Anh</label></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-9">
+        <span class="span mt-3">
+            <h4>{{selectedCategoryName||selectedSubcategoryName}}</h4> <!-- Hiển thị tên danh mục mẹ hoặc con -->
+        </span>
+        <div class="filter-bar mb-4 p-3 border bg-light">
+
+            <div class="filter-bar-options mt-3">
+                <label for="filter" class="mr-2 font-weight-bold">Lọc theo</label>
+                Thương hiệu
+            </div>
+            <div class="filter-bar-options mt-3">
+                <label for="sort" class="mr-2 font-weight-bold">Sắp xếp theo</label>
+                <div class="btn-group">
+                    <button class="btn btn-outline-secondary">Nổi bật</button>
+                    <button class="btn btn-outline-secondary">Bán chạy</button>
+                    <button class="btn btn-outline-secondary">Hàng mới</button>
+                    <button class="btn btn-outline-secondary">Giá cao tới thấp</button>
+                    <button class="btn btn-outline-secondary">Giá thấp tới cao</button>
+                </div>
+            </div>
+        </div>
+        <div class="product">
+            <div class=" d-flex ms-5">
+                <div *ngIf="filteredProducts && filteredProducts.length > 0" class="row row-cols-1 row-cols-md-3 g-4">
+                    <div *ngFor="let product of filteredProducts" class="col-md-4">
+                        <div class="card" style="width: 20rem;">
+                            <div class="card-overlay" (click)="detailProduct(product.productId)">
+                                <button class="btn btn-light mb-2">Add to cart</button>
+                                <div>
+                                    <button class="btn btn-link text-white me-5">
+                                        <i class="fa-solid fa-share-nodes"></i> Share
+                                    </button>
+                                    <button class="btn btn-link text-white">
+                                        <i class="fa-solid fa-heart"></i> Like
+                                    </button>
+                                </div>
+                            </div>
+                            <img [src]="getImageSrc(product.firstImage)" alt="Product Image" width="100%"
+                                height="100%" />
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.productName }}</h5>
+                                <div *ngIf="product.productSizes.length > 1">
+                                    <ng-container
+                                        *ngIf="getMinAndMaxPrice(product.productSizes).minPrice !== getMinAndMaxPrice(product.productSizes).maxPrice; else singlePrice">
+                                        <!-- Hiển thị khoảng giá nếu minPrice và maxPrice khác nhau -->
+                                        <p style="color: rgb(226, 23, 23); font-weight: bold;">
+                                            {{ getMinAndMaxPrice(product.productSizes).minPrice | number }} VND -
+                                            {{ getMinAndMaxPrice(product.productSizes).maxPrice | number }} VND
+                                        </p>
+                                    </ng-container>
+                                    <ng-template #singlePrice>
+                                        <!-- Hiển thị giá duy nhất nếu minPrice = maxPrice -->
+                                        <p style="color: rgb(226, 23, 23); font-weight: bold;">{{
+                                            getMinAndMaxPrice(product.productSizes).minPrice | number }} VND</p>
+                                    </ng-template>
+                                </div>
+
+                                <div *ngIf="product.productSizes?.length === 1">
+                                    <p>
+                                        <ng-container
+                                            *ngIf="product.productSizes[0].discountPrice && product.productSizes[0].discountPrice !== 0; else normalPrice">
+                                            <del>{{ product.productSizes[0].price | number }} VND</del>
+                                            <span style="color: rgb(226, 23, 23); font-weight: bold;">
+                                                {{ product.productSizes[0].discountPrice | number }} VND
+                                            </span>
+                                        </ng-container>
+                                        <ng-template #normalPrice>
+                                            {{ product.productSizes[0].price | number }} VND
+                                        </ng-template>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5">
+        <div class="p-5">
+            <div class="row justify-content-center ms-5">
+                <!-- Logo and Company Info -->
+                <div class="col-md-4 mb-3 ">
+                    <img src="image/logo.png" alt="Company Logo" class="mb-2" style="max-width: 150px;">
+                    <p>CÔNG TY TNHH 4 Anh Em</p>
+                    <p>Giấy chứng nhận đăng ký doanh nghiệp số 030918188, cấp ngày 29/01/2011, nơi cấp sở kế hoạch
+                        và
+                        đầu tư TP HCM.</p>
+                    <p>Trụ sở chính: Tổ X9-012, TP Hồ Chí Minh, VN</p>
+                    <p>Điện thoại: 0123456789</p>
+                    <img src="image/image 24.png" alt="Bộ Công Thương" class="mt-2" style="max-width: 120px;">
+                </div>
+
+                <!-- Social Media -->
+                <div class="col-md-2 mb-3">
+                    <h6>Theo dõi chúng tôi</h6>
+                    <div class="d-flex">
+                        <a href="#" class="mb-2"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="mb-2"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="mb-2"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                    <div class="flex-column">
+                        <h6>Chấp nhận Phương thức thanh toán</h6>
+                        <img src="image/image 29.png" alt="VNPay" class="mb-2" style="max-width: 100px;">
+                        <img src="image/image 30.png" alt="MoMo" style="max-width: 100px;">
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+
+
+                <!-- About Us -->
+                <div class="col-md-2 mb-3 ">
+                    <h6>Về chúng tôi</h6>
+                    <ul class="list-unstyled ">
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Tin tức</a></li>
+                        <li><a href="#">Cẩm nang làm đẹp</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Địa chỉ cửa hàng</a></li>
+                        <li><a href="#">Cho thuê mặt bằng</a></li>
+                    </ul>
+                </div>
+
+                <!-- Policies -->
+                <div class="col-md-4 mb-3">
+                    <h6>Chính sách</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Chính sách và quy định chung</a></li>
+                        <li><a href="#">Quy định và hình thức thanh toán</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách đổi/trả hàng và hoàn tiền</a></li>
+                        <li><a href="#">Chính sách bảo mật thông tin cá nhân</a></li>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Quy trình xuất hóa đơn điện tử</a></li>
+                        <li><a href="#">Chính sách Thông tin Hội Cầm</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-7">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4581.7122074656945!2d106.62223831125394!3d10.854452289254485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752a213fc53707%3A0x282726c50d505dd2!2zNDIgxJAuIFTDtCBLw70sIFRydW5nIE3hu7kgVMOieSwgUXXhuq1uIDEyLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e1!3m2!1svi!2s!4v1727494769344!5m2!1svi!2s"
+                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="col-md-5">
+                    <h4>Địa chỉ cửa hàng</h4>
+                    <div class="location d-flex">
+                        <p><i class="fa-solid fa-location-dot"></i></p>
+                        <p>42 Tô Ký Trung Mỹ Tây Quận 12</p>
+                    </div>
+                    <div class="phone-number d-flex">
+                        <p> <i class="fa-solid fa-phone"></i></p>
+                        <p>024 12345678</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/66069d7296.js" crossorigin="anonymous"></script>
+    <script src="/static/user/js/script.js"></script>

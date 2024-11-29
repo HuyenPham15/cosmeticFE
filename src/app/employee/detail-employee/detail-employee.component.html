@@ -1,0 +1,125 @@
+<!-- <app-navbar [title]="title"></app-navbar> -->
+
+<hr />
+<div *ngIf="employee">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <img [src]="avatarPreview ? avatarPreview : '/assets/image/' + employee.avatar" alt="Employee Avatar"
+                    class="img-fluid">
+                <div *ngIf="isEditing">
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <!-- Hiển thị tên khi không chỉnh sửa -->
+                        <span *ngIf="!isEditing">{{ employee.lastName }} {{ employee.firstName }}</span>
+
+                        <!-- Hiển thị input khi đang chỉnh sửa -->
+                        <div *ngIf="isEditing">
+                            <input [(ngModel)]="employee.lastName" type="text" class="form-control mb-2"
+                                placeholder="Nhập họ">
+                            <input [(ngModel)]="employee.firstName" type="text" class="form-control"
+                                placeholder="Nhập tên">
+                        </div>
+                    </h5>
+
+                    <p class="card-text mb-3"><strong>Giới Tính:</strong>
+                        <span *ngIf="!isEditing">{{ employee.gender ? 'Nam' : 'Nữ' }}</span>
+                        <select *ngIf="isEditing" [(ngModel)]="employee.gender">
+                            <option [ngValue]="true">Nam</option>
+                            <option [ngValue]="false">Nữ</option>
+                        </select>
+                    </p>
+
+                    <p class="card-text mb-3"><strong>Số Điện Thoại:</strong>
+                        <span *ngIf="!isEditing">{{ employee.phoneNumber }}</span>
+                        <input *ngIf="isEditing" [(ngModel)]="employee.phoneNumber" type="text" class="form-control" />
+                    </p>
+
+                    <p class="card-text mb-3"><strong>Email:</strong>
+                        <span *ngIf="!isEditing">{{ employee.email }}</span>
+                        <input *ngIf="isEditing" [(ngModel)]="employee.email" type="email" class="form-control" />
+                    </p>
+                    <p class="password">
+                        <strong>Mật Khẩu:</strong>
+                        <span>
+                            {{ showPassword ? employee.password! : '*'.repeat(employee.password?.length || 0) }}
+                        </span>
+                        <span *ngIf="currentUser === employee.email && !isEditing" (click)="togglePasswordVisibility()"
+                            style="cursor: pointer;">
+                            <i [ngClass]="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+                        </span>
+                    </p>
+
+                    <form *ngIf="isEditing" [formGroup]="changePasswordForm" class="mb-3">
+                        <div class="form-group">
+                            <label for="currentPassword">Mật Khẩu Hiện Tại:</label>
+                            <div class="input-group">
+                                <input id="currentPassword" [type]="showCurrentPassword ? 'text' : 'password'"
+                                    formControlName="currentPassword" class="form-control" />
+                                <span class="input-group-text" (click)="togglePassword('current')"
+                                    style="cursor: pointer;">
+                                    <i
+                                        [ngClass]="showCurrentPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+                                </span>
+                            </div>
+                            <div
+                                *ngIf="changePasswordForm.get('currentPassword')?.invalid && changePasswordForm.get('currentPassword')?.touched">
+                                <small class="text-danger">Mật khẩu hiện tại là bắt buộc.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">Mật Khẩu Mới:</label>
+                            <div class="input-group">
+                                <input id="newPassword" [type]="showNewPassword ? 'text' : 'password'"
+                                    formControlName="newPassword" class="form-control" />
+                                <span class="input-group-text" (click)="togglePassword('new')" style="cursor: pointer;">
+                                    <i [ngClass]="showNewPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+                                </span>
+                            </div>
+                            <div
+                                *ngIf="changePasswordForm.get('newPassword')?.invalid && changePasswordForm.get('newPassword')?.touched">
+                                <small class="text-danger">Mật khẩu mới phải dài ít nhất 6 ký tự.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Xác Nhận Mật Khẩu:</label>
+                            <div class="input-group">
+                                <input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+                                    formControlName="confirmNewPassword" class="form-control" />
+                                <span class="input-group-text" (click)="togglePassword('confirm')"
+                                    style="cursor: pointer;">
+                                    <i
+                                        [ngClass]="showConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+                                </span>
+                            </div>
+                            <div
+                                *ngIf="changePasswordForm.get('confirmNewPassword')?.invalid && changePasswordForm.get('confirmNewPassword')?.touched">
+                                <small class="text-danger">Vui lòng xác nhận mật khẩu mới.</small>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-2" [disabled]="!changePasswordForm.valid">Đổi
+                            Mật Khẩu</button>
+                    </form>
+                    <button *ngIf="!isEditing && currentUser === employee.email" (click)="isEditing = true"
+                        class="btn btn-primary">Sửa</button>
+
+
+                    <button *ngIf="isEditing" (click)="saveChange()" class="btn btn-success me-2">Lưu</button>
+                    <button *ngIf="isEditing" (click)="cancelEdit()" class="btn btn-secondary">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <button (click)="list()" class="btn btn-primary">Back to Employee List</button><br>
+</div>

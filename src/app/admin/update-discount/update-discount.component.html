@@ -1,0 +1,131 @@
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">Contact</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="navbar-search" href="#" role="button"><i class="fas fa-search"></i></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#"><i class="far fa-comments"></i><span
+                        class="badge badge-danger navbar-badge">3</span></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#"><i class="far fa-bell"></i><span
+                        class="badge badge-warning navbar-badge">15</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="fullscreen" href="#" role="button"><i
+                        class="fas fa-expand-arrows-alt"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
+                        class="fas fa-th-large"></i></a>
+            </li>
+        </ul>
+    </nav>
+
+    <app-aside></app-aside> <!-- Hiển thị AsideComponent -->
+
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Chỉnh Sửa Mã Giảm Giá</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                        title="Collapse"><i class="fas fa-minus"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <form (ngSubmit)="onSubmit()" #discountForm="ngForm" id="discount-details-form">
+                                    <!-- Mã Khuyến Mãi -->
+                                    <div class="form-group">
+                                        <label for="discountCode">Mã Khuyến Mãi</label>
+                                        <input type="text" id="discountCode" name="discountCode" class="form-control"
+                                            [(ngModel)]="discount.discountCode" required>
+                                    </div>
+
+                                    <!-- Mô Tả Khuyến Mãi -->
+                                    <div class="form-group">
+                                        <label for="description">Mô Tả</label>
+                                        <textarea id="description" name="description" class="form-control" rows="4"
+                                            [(ngModel)]="discount.description" required></textarea>
+                                    </div>
+
+                                    <!-- Loại Khuyến Mãi -->
+                                    <div class="form-group">
+                                        <label for="discountType">Loại Khuyến Mãi</label>
+                                        <select id="discountType" name="discountType" class="form-control"
+                                            [(ngModel)]="discount.discountType" required>
+                                            <option value="%">Phần trăm (%)</option>
+                                            <option value="VND">Số tiền (VND)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Giá Trị Khuyến Mãi -->
+                                    <div class="form-group">
+                                        <label for="amount">Giá Trị</label>
+                                        <input type="number" id="amount" name="amount" class="form-control"
+                                            [(ngModel)]="discount.amount" required>
+                                    </div>
+
+                                    <!-- Ngày Bắt Đầu -->
+                                    <div class="form-group">
+                                        <label for="startDate">Ngày Bắt Đầu</label>
+                                        <input type="date" id="startDate" name="startDate" class="form-control"
+                                            [(ngModel)]="discount.startDate" required>
+                                    </div>
+
+                                    <!-- Ngày Kết Thúc -->
+                                    <div class="form-group">
+                                        <label for="endDate">Ngày Kết Thúc</label>
+                                        <input type="date" id="endDate" name="endDate" class="form-control"
+                                            [(ngModel)]="discount.endDate" required>
+                                    </div>
+
+                                    <!-- Dropdown for Active/Inactive Status -->
+                                    <div class="form-group">
+                                        <label for="active">Trạng Thái</label>
+                                        <select id="active" name="active" class="form-control" [(ngModel)]="discount.active" required>
+                                            <option [value]="true">Hoạt động</option>
+                                            <option [value]="false">Ngừng hoạt động</option>
+                                        </select>
+                                    </div>
+                                    
+                                    
+
+                                    <!-- Số Lần Sử Dụng Tối Đa -->
+                                    <div class="form-group">
+                                        <label for="maxUsage">Số Lần Sử Dụng Tối Đa</label>
+                                        <input type="number" id="maxUsage" name="maxUsage" class="form-control"
+                                            [(ngModel)]="discount.maxUsage" required>
+                                    </div>
+
+                                    <!-- Nút Cập Nhật -->
+                                    <div class="form-group">
+                                        <button type="submit" class="btn bg-gradient-warning btn-md">Cập Nhật</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

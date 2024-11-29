@@ -1,0 +1,228 @@
+<div class="cart">
+    <div class="pay-cart">
+        <div class="pay">
+            <div class="container">
+                <div class="row mt-0">
+
+                    <div class="mb-5 mb-md-0">
+                        <h2 class="h3 mb-3 text-black">Thông Tin Giao Hàng</h2>
+                        <div class="location">
+                            <p><i class="fa-solid fa-location-dot"></i> Địa chỉ giao hàng</p>
+                            <p>{{ userInfo.lastName }} {{ userInfo.firstName }} | {{ userInfo.phoneNumber }}</p>
+
+                            <p>{{ userInfo.addresses[0].specificAddress }}</p>
+
+                            <button (click)="toggleShippingForm()" type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                Thay đổi địa chỉ
+                            </button>
+                        </div>
+
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Thay đổi thông tin giao
+                                            hàng</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form ng-form="billingForm">
+                                            <!-- Name Fields -->
+                                            <div class="row  mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="fname" class="text-black">Họ<span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="fname" name="fname"
+                                                        placeholder="Nhập Họ" ng-model="fname" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="lname" class="text-black">Tên<span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="lname" name="lname"
+                                                        placeholder="Nhập Tên" ng-model="lname" required>
+                                                </div>
+                                            </div>
+
+                                            <!-- Location Fields -->
+                                            <div class="form-group  mb-3">
+                                                <label for="city" class="text-black">Tỉnh/ Thành phố<span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" ng-model="city"
+                                                    ng-options="y.Name for (x,y) in cities" required>
+                                                    <option value="" selected>Tỉnh/ Thành phố</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group  mb-3">
+                                                <label for="district" class="text-black">Quận/ Huyện<span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" ng-model="district"
+                                                    ng-options="y.Name for (x,y) in city.Districts" required>
+                                                    <option value="" selected>Quận/ huyện</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="ward" class="text-black">Phường/ Xã<span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" ng-model="ward"
+                                                    ng-options="y.Name for (x,y) in district.Wards" required>
+                                                    <option value="" selected>Phường/xã</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Address and Phone -->
+                                            <div class="form-group mb-3">
+                                                <label for="address" class="text-black">Địa chỉ<span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="address" name="address"
+                                                    placeholder="Địa chỉ cụ thể" ng-model="address" required>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="phone" class="text-black">Số ĐT<span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="phone" name="phone"
+                                                    placeholder="Nhập SDT của bạn" ng-model="phone" required>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="set-default" class="text-black">
+                                                    <input type="checkbox" id="set-default" name="set-default">
+                                                    Đặt địa chỉ này làm địa chỉ mặc định
+                                                </label>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="">
+                        <div class="p-3 p-lg-5">
+                            <h3 class="text-black h4 text-uppercase">Sản phẩm</h3>
+                            <div class="d-flex mb-5 p-3" *ngFor="let items of selectedItems">
+                                <div style="width: 30%;">
+                                    <img [src]="'/assets/upload/' + items.productImage" class="img-fluid rounded-start"
+                                        alt="...">
+                                </div>
+                                <div style="width: 70%; padding-left: 10px;">
+                                    <p class="font-weight-bold">{{items.productName}}</p>
+                                    <p>Dung tích: {{items.variant}}</p>
+                                    <p>Số lượng: {{items.quantity}}</p>
+                                </div>
+                                <p>
+                                    <input type="checkbox" [(ngModel)]="items.insuranceSelected" /> Bảo hiểm bảo vệ
+                                    người tiêu dùng: 3.000 VNĐ
+                                </p>
+                            </div>
+                            <div class="border p-lg-5 mt-5">
+                                <label class="h4" for="discount">Áp dụng giảm giá</label>
+                                <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+                                <div *ngIf="discounts.length > 0">
+                                    <form>
+                                        <ul>
+                                            <li *ngFor="let discount of discounts">
+                                                <label>
+                                                    <input type="radio" name="discount" [value]="discount.discountCode"
+                                                        [(ngModel)]="selectedDiscountCode">
+                                                    <strong>{{ discount.discountCode }}</strong> - {{
+                                                    discount.description }}
+                                                    <p>Giảm giá: {{ discount.amount }} ({{ discount.discountType }})</p>
+
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </form>
+                                </div>
+
+                                <div *ngIf="discounts.length === 0">
+                                    <p>Hiện tại không có giảm giá còn hạn.</p>
+                                </div>
+
+                                <!-- Hiển thị mã giảm giá đã chọn -->
+                                <div *ngIf="selectedDiscountCode">
+                                    <h5>Mã giảm giá đã chọn: {{ selectedDiscountCode }}</h5>
+                                </div>
+                                <button (click)="applyDiscount()" [disabled]="!selectedDiscountCode">Áp dụng giảm
+                                    giá</button>
+
+                            </div>
+
+
+                            <div class="border p-lg-5 mt-5">
+                                <h4>Đơn Hàng Của Bạn</h4>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td>Tổng sản phẩm đã chọn</td>
+                                            <td>{{ countUniqueProducts() }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Phí vận chuyển</td>
+                                            <td>{{shippingFee}}
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Mã giảm giá</td>
+                                            <td>{{discountAmount | number }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <hr>
+                                            </td>
+                                        </tr>
+                                        <tr class="text-danger font-weight-bold">
+                                            <td>Tổng thanh toán (*Đã bao gồm VAT)</td>
+                                            <td>{{ calculateTotalPrice(shippingFee, discountAmount) | number }} VND</td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                                <div class="leadtime">
+                                    <p class="text-success" *ngIf="deliveryDate">Ngày giao hàng dự kiến: {{ deliveryDate
+                                        | date: 'dd/MM/yyyy' }}</p>
+                                </div>
+                                <h5>Phương Thức Thanh Toán</h5>
+                                <div class="form-check d-flex">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCOD"
+                                        value="1" [(ngModel)]="selectedPaymentMethod"
+                                        (change)="onPaymentMethodChange()" />
+                                    <label class="form-check-label" for="paymentCOD">
+                                        Thanh toán khi nhận hàng (COD)
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentWallet"
+                                        value="2" [(ngModel)]="selectedPaymentMethod"
+                                        (change)="onPaymentMethodChange()" />
+                                    <label class="form-check-label" for="paymentWallet">
+                                        Thanh toán qua ví điện tử
+                                    </label>
+                                </div>
+                                <button class="btn btn-warning w-100 text-center font-weight-bold"
+                                    (click)="createOrder()">
+                                    Mua Ngay
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
